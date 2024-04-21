@@ -13,8 +13,21 @@ const getAllUsuarios = async (req,res) => {
     //res.send('Retornando usuarios'); Lado del cliente
 }
 
-const getUsuario = (req,res) => {
-    res.send('Retornando 1 usuario');
+const getUsuarioId = async (req,res) => {
+
+    try {
+        const {id} = req.params;
+
+        const result = await pool.query('SELECT * FROM usuario WHERE id = $1', [id]);
+
+        if (result.rows.length === 0) return res.status(404).json({
+            message: 'Usuario no Encontrado'
+        }) 
+
+        return res.json(result.rows[0]);
+    } catch (error) {
+        console.log(error.message)
+    }
 }
 
 const createUsuario = async (req,res) => {
@@ -37,18 +50,41 @@ const createUsuario = async (req,res) => {
 
 }
 
-const deleateUsuario = (req,res) => {
-    res.send('Eliminando un usuario');
+const deleateUsuario = async (req,res) => {
+
+    const {id} = req.params;
+
+    const result = await pool.query('DELETE FROM usuario WHERE id = $1 RETURNING *', [id]);
+
+    if(result.rowCount === 0) return res.status(404).json({
+        message: "task not found"
+    });
+
+    return res.sendStatus(204);//estado de que funciono todo bien pero no devuelvo body no devuelvo nada
+    //console.log(result);
+    //res.send('Eliminando un usuario');
 }
 
-const updateUsuario = (req,res) => {
-    res.send('Actualizando un usuario ');
+const updateUsuarioId = async (req,res) => {
+
+    const {id} = req.params;
+    const {rol, nombre, apellidos, correo, clave, telefono, fecha, pais, millas} = req.body; //Cuerpo de la peticion suele ser un json
+
+    const result = await pool.query("UPDATE usuario SET rol = $1, nombre = $2, apellidos = $3, correo = $4, clave = $5, telefono = $6, fecha = $7, pais = $8, millas = $9 WHERE id = $10 RETURNING *",[
+            rol, nombre, apellidos, correo, clave, telefono, fecha, pais, millas, id,])
+    
+    if (result.rows.length === 0) return res.status(404).json({
+        message: 'Usuario no Encontrado'
+    }) 
+    res.json(result.rows[0])
+    //console.log(id,rol, nombre, apellidos, correo, clave, telefono, fecha, pais, millas);
+    //res.send('Actualizando un usuario ');
 }
 
 module.exports = {
     getAllUsuarios,
-    getUsuario,
+    getUsuarioId,
     createUsuario,
     deleateUsuario,
-    updateUsuario
+    updateUsuarioId
 }
