@@ -62,9 +62,10 @@ const deleateUsuario = async (req,res,next) => {
         const result = await pool.query('DELETE FROM usuario WHERE id = $1 RETURNING *', [id]);
 
         if(result.rowCount === 0) return res.status(404).json({
-            message: "task not found"
+            message: "usuario not found"
         });
 
+        console.log(result.rows[0]);
         return res.sendStatus(204);//estado de que funciono todo bien pero no devuelvo body no devuelvo nada
         //console.log(result);
         //res.send('Eliminando un usuario');
