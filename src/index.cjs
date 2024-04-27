@@ -9,7 +9,7 @@ const app = express(); //app sera una instacia de express
 
 app.use(cors());//Permite comunicar 2 servidores
 app.use(morgan('dev')); //Para ver por consola las peticiones
-app.use(express.json()) ;//Para que entineda las peticiones post en formato json
+app.use(express.json()) ;//Para que entineda las peticiones post en formato json //req body
 
 
 app.use(taskRoutes);

@@ -1,6 +1,6 @@
 //URLs que el front va a utilizar para hacer peticiones
 const {Router} = require('express');
-const {getAllUsuarios, createUsuario, deleateUsuario, getUsuarioId, updateUsuarioId} = require('../controllers/sk.controller.cjs')
+const {getAllUsuarios, createUsuario, deleateUsuario, getUsuarioId, updateUsuarioId, verificarUsuario} = require('../controllers/sk.controller.cjs')
 const router = Router();//Crear nuevas urls
 
 
@@ -18,5 +18,8 @@ router.delete('/usuarios/:id', deleateUsuario);
 
 //Actualizar un Usuario dado el id de este, se debe anexar un json con todo lo nuevo excepto el id
 router.put('/usuarios/:id', updateUsuarioId);
+
+//ruta para el login
+router.post('/login', verificarUsuario);
 
 module.exports = router;
