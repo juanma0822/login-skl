@@ -1,7 +1,7 @@
 // Funciones que usaea routes, es para que se vea mas organizado 
 const pool = require('../db.cjs');
 const bcrypt = require('bcrypt');
-const jwtGenerator = require('../utils/jwtGenerator.cjs')
+const jwtGenerator = require('../utils/jwtGenerator.cjs');
 
 const getAllUsuarios = async (req,res,next) => {
     
@@ -33,7 +33,6 @@ const getUsuarioId = async (req,res,next) => {
         next(error);
     }
 }
-
 
 //PARA EL REGISTRO 
 const createUsuario = async (req,res,next) => {
@@ -72,8 +71,7 @@ const createUsuario = async (req,res,next) => {
         //res.send('Creando un usuario');
 
         //5. Generar el jwt token
-        const token = jwtGenerator(result.rows[0].id);
-
+        const token = jwtGenerator(result.rows[0].correo,result.rows[0].nombre);
         res.json({token});
         
     } catch (error) {
@@ -148,8 +146,10 @@ const verificarUsuario = async(req,res,next) => {
             return res.status(401).json("Contraseña incorrecta")
         }
 
+        //res.json("ACCESSO PERMITIDO")
+
         //4. responder con jwt token
-        const token = jwtGenerator(user.rows[0].id);
+        const token = jwtGenerator(user.rows[0].correo,user.rows[0].nombre);
 
         res.json({token});
         
@@ -159,11 +159,38 @@ const verificarUsuario = async(req,res,next) => {
     }
 }
 
+//Verificar que esta autenticado
+const isAutenticado = async (req,res,next) =>{
+
+    try {
+        res.json(true)
+    } catch (error) {
+        res.status(500); //Error del servidor
+        next(error);
+    }
+}
+
+//accesoRestringido
+const getUsuaLog = async (req,res,next) =>{
+    try {
+        const result = await pool.query('SELECT nombre FROM usuario WHERE correo = $1', [req.user]);
+        if (result.rows.length === 0) return res.status(404).json({
+            message: 'Usuario no Encontrado'
+        }) 
+
+        return res.json(result.rows[0]);
+    } catch (err) {
+        console.error(err.message)
+        res.status(500).json("Error Servidor")
+    }
+}
 module.exports = {
     getAllUsuarios,
     getUsuarioId,
     createUsuario,
     deleateUsuario,
     updateUsuarioId,
-    verificarUsuario
+    verificarUsuario,
+    isAutenticado,
+    getUsuaLog
 }
