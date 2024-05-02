@@ -1,9 +1,9 @@
-//Archivo config se encargara solo de contener valores que luego usare
+//Archivo config se encargara de solo contener las credenciales de la BD 
 const {config} = require('dotenv') //Para ocultar credenciales
 config(); //cargar valores de .env
 
 
-//Estos valores os traera del .env y se llaman con el config()
+//Estos valores los traera del .env y se llaman con el config()
 module.exports = {
     db:{
         user: process.env.DB_USER,

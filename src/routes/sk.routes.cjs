@@ -10,21 +10,29 @@ router.get('/usuarios', getAllUsuarios);
 //OObtener 1 usuario por Id
 router.get('/usuarios/:id', getUsuarioId);
 
-//Crear un Usuario
-router.post('/usuarios', createUsuario);
-
 //Eliminar un Usuario
 router.delete('/usuarios/:id', deleateUsuario);
 
 //Actualizar un Usuario dado el id de este, se debe anexar un json con todo lo nuevo excepto el id
 router.put('/usuarios/:id', updateUsuarioId);
 
-//ruta para el login
+//-------------------------------------
+//REGISTRO
+
+//Crear un Usuario
+router.post('/usuarios', createUsuario);
+
+//-------------------------------------
+//LOGIN y NAVBAR (CUANDO INICIA SESION)
+
+//Ruta para el login
 router.post('/login', verificarUsuario);
 
 //Para utenticar inicio de sesion
 router.get('/estalogin',auth,isAutenticado);
 
-//Obtener el nomre en la navBar
+//Obtener el nombre en la navBar
 router.get('/usuarioLogin',auth,getUsuaLog);
+
+//---------------------------------------
 module.exports = router;

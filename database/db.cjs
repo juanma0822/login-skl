@@ -1,4 +1,5 @@
-const {Pool} = require('pg');
+//Conectarse a la BD
+const {Pool} = require('pg'); 
 const {db} = require('./config.cjs'); //Archivo que contendra las variables
 
 const pool = new Pool({

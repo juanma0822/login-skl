@@ -14,12 +14,5 @@ app.use(express.json()) ;//Para que entineda las peticiones post en formato json
 
 app.use(taskRoutes);
 
-app.use((err,req,res,next) => {
-    return res.json({
-        message: err.message
-    })
-});//middleware para errores
-
-
 app.listen(4000) //Inicia el servidor, y la app recibira solicitudes en este puerto
 console.log('Server on port 4000')

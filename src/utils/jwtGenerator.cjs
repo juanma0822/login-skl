@@ -4,11 +4,11 @@ config();
 
 function jwtGenerator(email,nom){
     const payload = {
-        user: email,
+        correo: email,
         nombre: nom
     }
 
-    return jwt.sign(payload, process.env.jwtSecret, {expiresIn: "1hr"})
+    return jwt.sign(payload, process.env.jwtSecret, {expiresIn: "1h"})
 }
 
 module.exports = jwtGenerator
