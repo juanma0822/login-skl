@@ -13,6 +13,8 @@ router.get('/usuarios/:id', getUsuarioId);
 //Eliminar un Usuario
 router.delete('/usuarios/:id', deleateUsuario);
 
+//--------------------------------------
+//ACTUALIZAR PERFIL USUARIO
 //Actualizar un Usuario dado el id de este, se debe anexar un json con todo lo nuevo excepto el id
 router.put('/usuarios/:id', updateUsuarioId);
 

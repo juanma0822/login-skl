@@ -49,19 +49,33 @@ const deleateUsuario = async (req,res) => {
     }
 }
 
-const updateUsuarioId = async (req,res,next) => {
+//------------------------------------------------
+//ACTULIZAR PERFIL USUARIO
+
+const updateUsuarioId = async (req,res) => {
 
     try {
         const {id} = req.params;
-        const {rol, nombre, apellidos, correo, clave, telefono, fecha, pais, millas} = req.body; //Cuerpo de la peticion suele ser un json
+        const {nombre, apellidos, correo, clave, telefono, pais} = req.body; //Cuerpo de la peticion suele ser un json
 
-        const result = await pool.query("UPDATE usuario SET rol = $1, nombre = $2, apellidos = $3, correo = $4, clave = $5, telefono = $6, fecha = $7, pais = $8, millas = $9 WHERE id = $10 RETURNING *",[
-                rol, nombre, apellidos, correo, clave, telefono, fecha, pais, millas, id,])
+        const email = await pool.query("SELECT * FROM usuario where correo = $1", [correo]);
+
+        if(email.rows.length !== 0){
+            return res.status(401).json("Este correo ya se encuentra en uso");
+        }
+
+        //3. Bcrypt Contraseñá
+        const saltRound = 10;
+        const salt = await bcrypt.genSalt(saltRound);
+
+        const bcryptClave = await bcrypt.hash(clave, salt);
+
+        const result = await pool.query("UPDATE usuario SET nombre = $1, apellidos = $2, correo = $3, clave = $4, telefono = $5, pais = $6 WHERE id = $7 RETURNING *",[
+                nombre, apellidos, correo, bcryptClave, telefono,pais, id,])
         
-        if (result.rows.length === 0) return res.status(404).json({
-            message: 'Usuario no Encontrado'
-        }) 
-        res.json(result.rows[0])
+        //5. Generar el jwt token
+        const token = jwtGenerator(result.rows[0].correo,result.rows[0].nombre);
+        res.json({token});
         //console.log(id,rol, nombre, apellidos, correo, clave, telefono, fecha, pais, millas);
         //res.send('Actualizando un usuario ');
     } catch (error) {
@@ -165,11 +179,11 @@ const isAutenticado = async (req,res) =>{
     }
 }
 
-//accesoRestringido - Obtener el nombre en la navBar
+//accesoRestringido - Obtener el nombre en la navBar tras el middleware
 const getUsuaLog = async (req,res) =>{
     try {
 
-        const result = await pool.query('SELECT nombre FROM usuario WHERE correo = $1', [req.correo]);
+        const result = await pool.query('SELECT nombre, id FROM usuario WHERE correo = $1', [req.correo]);
         res.json(result.rows[0]);
 
     } catch (err) {
