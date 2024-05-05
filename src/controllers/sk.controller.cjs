@@ -158,7 +158,7 @@ const verificarUsuario = async(req,res) => {
 
         //4. responder con jwt token
         const token = jwtGenerator(user.rows[0].correo,user.rows[0].nombre);
-        res.json({token});
+        res.json({llave: token, rol: user.rows[0].rol});
         
     } catch (error) {
         console.error(error.message);

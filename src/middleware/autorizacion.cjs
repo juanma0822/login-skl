@@ -10,7 +10,7 @@ module.exports = async (req,res,next) => {
 
         //verificar que hay token
         if(!jwtToken){
-            return res.status(403).json("No estas autorizado");
+            return res.status(403).json("No estas autorizado, no hay token");
         }
 
         //verificar que si sea el token
@@ -24,6 +24,6 @@ module.exports = async (req,res,next) => {
     } catch (error) {
         console.error(error.message); 
         //Por alguna razon no muestra el json con el mensaje esto es en la primera renderizacion
-        return res.status(401).json("Token No Valido");
+        return res.status(401).json("Token No Valido, No estas autorizado, no hay token");
     }
 };
