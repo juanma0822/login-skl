@@ -193,6 +193,20 @@ const getUsuaLog = async (req,res) =>{
 
     }
 }
+
+
+//------------------- PARA TRAER TODOS LOS AEROPUERTOS
+
+const getAllAeropuertos = async (req,res) => {
+    
+    try {
+        const allaeropuertos = await pool.query("SELECT id_aeropuerto,nombre FROM aeropuerto");
+        res.json(allaeropuertos.rows); //Lado del cliente
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 //-----------------------------------------------------
 
 module.exports = {
@@ -203,5 +217,6 @@ module.exports = {
     updateUsuarioId,
     verificarUsuario,
     isAutenticado,
-    getUsuaLog
+    getUsuaLog,
+    getAllAeropuertos
 }
